@@ -6,7 +6,7 @@
 # 使用方法
 
 ~~~
-python find_unused_pics.py image_path project_source_path
+python find_unused_pics.py image_path project_source_path del(option)
 ~~~
 
 ### 详解：
@@ -15,4 +15,5 @@ python find_unused_pics.py image_path project_source_path
 python find_unused_pics.py 代表执行脚本  
 image_path 表示图片文件夹，会递归搜索图片
 project_source_path 表示代码文件夹
+del 是可选参数，若写了标示将未用图片删除
 ~~~
