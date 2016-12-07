@@ -7,9 +7,21 @@ import time
 import glob
 from sys import argv
 
-#from colorama import init, Fore, Back, Style
-#init(autoreset=True)    #  初始化，并且设置颜色设置自动恢复
-#print(Fore.RED + 'some red text')
+COLORS  = {
+    "blue": "0;34m",
+    "green": "0;32m",
+    "cyan": "0;36m",
+    "red": "0;31m",
+    "purple": "0;35m",
+    "brown": "0;33m",
+    "yellow": "1;33m",
+    "lred": "1;31m",
+}
+
+def print_color_string(string, color):
+    print ("\033[" + COLORS[color])
+    print string
+    print '\033[0m'
 
 def find_all_pngs(image_path):
     command = 'ag -l -g "\.png$" %s' % (image_path)
@@ -28,7 +40,8 @@ def find_all_pngs(image_path):
             all_pic[pic_name] = pic
     print "all pics :"
     print '\n'.join(all_pic.keys())
-    print "all count(include 2x 3x) : %s, unique name pics : %s" % (len(pics), len(all_pic))
+    summary = "all count(include 2x 3x) : %s, unique name pics : %s" % (len(pics), len(all_pic))
+    print_color_string(summary, "brown")
     return all_pic
 
 def find_unused_pics(image_path, search_path):
@@ -45,15 +58,19 @@ def find_unused_pics(image_path, search_path):
         print "当前搜索进度：%s" % (index * 100.0 / length)
         # if index > 20:
         #     break
-        command = r'ag -l "@\"%s" %s' % (pic, search_path)
+        command = r'ag -lac "\"%s" %s' % (pic, search_path)
         # command = r'ag -g "\"%s" %s' % (pic, search_path)
         # print command
         result = os.popen(command).readlines()
 
         # print result
         # print "len:", len(result)
-        if len(result) == 0:
+        result_count = len(result)
+        if result_count == 0:
             unused_pics[pic] = pics[pic]
+        elif result_count == 1 and (result[0]).find(image_path) >= 0:
+            unused_pics[pic] = pics[pic]
+            # print_color_string("just in image: %s" % (result[0]), "red")
 
     #将未使用的图片文件名保存到文本
     # txt_path = 'unused_pic.txt'
@@ -95,7 +112,6 @@ if __name__ == '__main__':
         exit(0)
     print "image folder: %s" % (argv[1])
     print "code folder: %s" % (argv[2])
-    # find_all_pngs(argv[1])
     st_time = time.time()
     unused_pics = find_unused_pics(argv[1], argv[2])
     ed_time = time.time()
