@@ -17,3 +17,9 @@ image_path 表示图片文件夹，会递归搜索图片
 project_source_path 表示代码文件夹
 del 是可选参数，若写了标示将未用图片删除
 ~~~
+
+# 注意
+
+若提示ag命令找不到，请安装ag库。可用brew安装，命令如下：
+
+> brew install ag
