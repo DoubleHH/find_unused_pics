@@ -5,6 +5,7 @@ import shutil
 import os
 import time
 import glob
+import re
 from sys import argv
 
 COLORS  = {
@@ -56,7 +57,7 @@ def find_unused_pics(image_path, search_path):
     for pic in set(pics.keys()):
         index = index + 1
         print "当前搜索进度：%s" % (index * 100.0 / length)
-        # if index > 20:
+        # if index > 200:
         #     break
         command = r'ag -lac "\"%s" %s' % (pic, search_path)
         # command = r'ag -g "\"%s" %s' % (pic, search_path)
@@ -77,14 +78,27 @@ def find_unused_pics(image_path, search_path):
     # txt = '\n'.join(sorted(unused_pics))
     # os.system('echo "%s" > %s'%(txt, txt_path))
 
+    doubtful_keys = []
+    pattern = pattern = re.compile(r'.*\d+')
+    for pic in unused_pics.keys():
+        result = pattern.match(pic)
+        if result != None:
+            doubtful_keys.append(pic)
+
+    unused_keys = set(unused_pics.keys())
     print '\033[0;31;40m'
-    print '*' * 20 ,  "未使用的图片", '*' * 20
-    for pic in set(unused_pics.keys()):
+    print '*' * 20 ,  ("未使用的图片：%s个" % len(unused_keys)), '*' * 20
+    for pic in unused_keys:
     	print '\t', pic
     print '*' * 50
     print "total unused pic count : %s" % len(unused_pics)
     print 'Done!'
     print '\033[0m'
+
+    # print doubtful keys
+    print_color_string("注意：可能程序中特殊处理用到的图片，%d个" % (len(doubtful_keys)), "purple")
+    print_color_string('\n'.join(doubtful_keys), "brown")
+
     return unused_pics
 
 def mk_new_dir(path):
@@ -105,7 +119,6 @@ def delete_unused_image(unused_pics):
 
 
 if __name__ == '__main__':
-
     if len(argv) < 3:
         print "参数错误：\n第一个参数图片的文件夹，\n第二个参数是要搜索的文件夹"
         print "Usage: python find_unused_pics.py images_path search_path del(option)"
