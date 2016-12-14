@@ -40,4 +40,4 @@ if __name__ == '__main__':
     total_time = "Searching total time: %.1f seconds" % (ed_time - st_time)
     find_unused_pics_public.print_color_string(total_time, "lred")
     if options.delete:
-        find_unused_pics_public.delete_unused_image(unused_pics)
+        find_unused_pics_public.delete_unused_image(unused_pics, not options.android)

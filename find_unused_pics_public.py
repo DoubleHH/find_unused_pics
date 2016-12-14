@@ -47,6 +47,7 @@ def find_all_pngs(image_path, is_ios):
             else:
                 if pic_name.find("@2x") != -1 or pic_name.find("@3x") != -1:
                     print_color_string("%s 图片命名不正确，请注意！！！" % pic)
+                    continue
                 else:
                     print_color_string("%s 是单倍图！" % pic)
         # print pic
@@ -79,8 +80,8 @@ def find_unused_pics(image_path, search_path, is_ios):
     for pic in keys:
         index = index + 1
         print "Search progress：%.2f%%" % (index * 100.0 / length)
-        if index > 0:
-            break
+        # if index > 0:
+        #     break
         if is_ios:
             pattern = "\\\"%s" % (pic)
         else:
@@ -97,11 +98,6 @@ def find_unused_pics(image_path, search_path, is_ios):
             unused_pics[pic] = pics[pic]
         elif is_ios and result_count == 1 and (result[0]).find(image_path) >= 0:
             unused_pics[pic] = pics[pic]
-            # print_color_string("just in image: %s" % (result[0]), "red")
-    #将未使用的图片文件名保存到文本
-    # txt_path = 'unused_pic.txt'
-    # txt = '\n'.join(sorted(unused_pics))
-    # os.system('echo "%s" > %s'%(txt, txt_path))
     doubtful_keys = []
     pattern = pattern = re.compile(r'.*\d+')
     unused_size = 0
@@ -123,6 +119,10 @@ def find_unused_pics(image_path, search_path, is_ios):
     # print doubtful keys
     print_color_string("注意：可能程序中特殊处理用到的图片，%d个" % (len(doubtful_keys)), "purple")
     print_color_string('\n'.join(doubtful_keys), "brown")
+
+    for value in doubtful_keys:
+        del unused_pics[value]
+
     return unused_pics
 
 def mk_new_dir(path):
@@ -131,12 +131,28 @@ def mk_new_dir(path):
         shutil.rmtree(path)
     os.makedirs(path)
 
-def delete_unused_image(unused_pics):
-    path = os.path.abspath('.') + "/unused_pics"
+def delete_unused_image(unused_pics, is_ios):
+    path = os.path.abspath('.') + "/unused_pics/"
     mk_new_dir(path)
     # save unused pic
     if os.path.exists(path):
-        for pic_path in unused_pics.values():
-            pic_path_dealed = pic_path.strip().strip('\n')
-            shutil.copy(pic_path_dealed,  path)
-            os.remove(pic_path_dealed)
+        for pic_path_array in unused_pics.values():
+            pic_path = pic_path_array[0]
+            is_dir = False
+            to_path = path
+            if is_ios:
+                # check is imageset
+                pic_path_splits = pic_path.split("/")
+                if pic_path_splits[-2].endswith(".imageset"):
+                    to_path += pic_path_splits[-2]
+                    is_dir = True
+                    pic_path_splits.pop()
+                    pic_path = "/".join(pic_path_splits)
+                    print_color_string("pic_path: %s" % pic_path)
+            if is_dir:
+                shutil.copytree(pic_path, to_path)
+                shutil.rmtree(pic_path)
+            else:
+                shutil.copy(pic_path, to_path)
+                os.remove(pic_path)
+            print "remove %s, cp to: %s" % (pic_path, to_path)
