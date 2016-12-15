@@ -22,7 +22,7 @@ Usage: python find_unused_pics.py [optinos] image_path search_path
 Options:
   -h, --help     show this help message and exit
   -a, --android  Search in Android project.(表明是搜索安卓工程)
-  -d, --delete   Delete the unused pics.(表明搜索到即删除掉，慎用~)
+  -d, --delete   Delete the unused pics.(表明搜索到即删除掉，且会保存删除的图片以备回滚)
 ~~~
 
 ### 详解：
