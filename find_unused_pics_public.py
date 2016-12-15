@@ -132,6 +132,7 @@ def mk_new_dir(path):
     os.makedirs(path)
 
 def delete_unused_image(unused_pics, is_ios):
+    print_color_string("Start remove %d pictures or imageset" % (len(unused_pics)), "green")
     path = os.path.abspath('.') + "/unused_pics/"
     mk_new_dir(path)
     # save unused pic
@@ -148,7 +149,6 @@ def delete_unused_image(unused_pics, is_ios):
                     is_dir = True
                     pic_path_splits.pop()
                     pic_path = "/".join(pic_path_splits)
-                    print_color_string("pic_path: %s" % pic_path)
             if is_dir:
                 shutil.copytree(pic_path, to_path)
                 shutil.rmtree(pic_path)
