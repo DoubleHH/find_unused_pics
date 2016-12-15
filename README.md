@@ -5,7 +5,7 @@
 
 ### 特点
 
-1. 可以搜索**xib**文件； 
+1. 可以搜索**xib**文件；
 2. 同时支持Android及iOS**双系统**png图片搜索；
 3. 显示统计未使用图片**名称及其总大小**，用于评估；
 4. **支持删除**搜出来的未使用图片，且不会删除可能误搜的图片。会先保存删除的图片，还会输出删除位置和复制的位置；
@@ -52,7 +52,7 @@ python find_unused_pics.py -d /Users/doubleHH/Downloads/app/res  /Users/doubleHH
 python find_unused_pics.py -ad /Users/doubleHH/Downloads/app/res  /Users/doubleHH/Downloads/app
 ~~~
 
-# 注意
+# <mark>注意</mark>
 
 若提示ag命令找不到，请安装ag库。可用brew安装，命令如下：
 
