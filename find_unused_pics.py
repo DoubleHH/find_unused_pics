@@ -25,8 +25,6 @@ if __name__ == '__main__':
                     help = u"Delete the unused pics.(表明搜索到即删除掉，慎用~)"
                     )
     (options, args) = parser.parse_args()
-    print options
-    print args
     if len(args) <= 0:
         print "参数错误：\n第一个参数图片的文件夹，\n第二个参数是要搜索的文件夹\n[options]指定其他功能用--help或-h来查看"
         print "Usage:python %s [optinos] image_path search_path" % (__file__)

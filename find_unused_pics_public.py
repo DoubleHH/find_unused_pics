@@ -35,23 +35,34 @@ def find_all_pngs(image_path, is_ios):
         if len(picnames) <= 0:
             continue
         if is_ios:
+            # iOS
             pic_pre_path = picnames[-2]
             # Appicon and launch image
             if pic_pre_path.endswith(".appiconset") or pic_pre_path.endswith(".launchimage"):
                 continue
-        pic_name = picnames[-1]
-        pic_name = pic_name[:-4]
-        if is_ios:
-            if pic_name.endswith('@2x') or pic_name.endswith('@3x'):
-                pic_name = pic_name.replace('@2x', '').replace('@3x', '')
+            imageset_suffix = ".imageset"
+            if pic_pre_path.endswith(imageset_suffix):
+                pic_name = pic_pre_path[:-len(imageset_suffix)]
+                png_real_name = picnames[-1].replace(".png", "").replace("@2x", "").replace("@3x", "")
+                if cmp(png_real_name, pic_name) != 0:
+                    print_color_string("imageset图片与png名称不一致: %s" % pic)
             else:
-                if pic_name.find("@2x") != -1 or pic_name.find("@3x") != -1:
-                    print_color_string("%s 图片命名不正确，请注意！！！" % pic)
-                    continue
-                else:
-                    print_color_string("%s 是单倍图！" % pic)
-        # print pic
-        # print pic_name
+                pic_name = picnames[-1]
+                pic_name = pic_name[:-4]
+                index = pic_name.find("@2x")
+                if index == -1:
+                    index = pic_name.find("@3x")
+                if index != -1:
+                    pic_name = pic_name[:index]
+                    if len(pic_name) <= 0:
+                        print_color_string("图片命名有问题: %s" % pic)
+                        continue
+            if picnames[-1].find("@2x") == -1 and picnames[-1].find("@3x") == -1:
+                print_color_string("单倍图: %s" % pic)
+        else:
+            # Android
+            pic_name = picnames[-1]
+            pic_name = pic_name[:-4]
         array = all_pic.get(pic_name)
         if array == None:
             array = []
