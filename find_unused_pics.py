@@ -1,6 +1,8 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 
+# 找到工程中未使用的图片，可做删除
+
 import shutil
 import os
 import time
@@ -22,7 +24,7 @@ if __name__ == '__main__':
                     action = "store_true",
                     dest = "delete",
                     default = False,
-                    help = u"Delete the unused pics.(表明搜索到即删除掉，慎用~)"
+                    help = u"Delete the unused pics.(表明搜索到即删除掉)"
                     )
     (options, args) = parser.parse_args()
     if len(args) <= 0:

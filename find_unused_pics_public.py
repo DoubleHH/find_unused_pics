@@ -21,9 +21,9 @@ COLORS  = {
 }
 
 def print_color_string(string, color="red"):
-    print ("\033[" + COLORS[color])
-    print string
-    print '\033[0m'
+    if not string or len(string) == 0:
+        return
+    print ("\033[" + COLORS[color] + string + "\033[0m")
 
 def find_all_pngs(image_path, is_ios):
     command = 'ag -l -g "\.png$" %s' % (image_path)
