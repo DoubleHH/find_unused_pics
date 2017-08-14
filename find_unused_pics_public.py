@@ -18,12 +18,20 @@ COLORS  = {
     "brown": "0;33m",
     "yellow": "1;33m",
     "lred": "1;31m",
+    "o_yellow": "3;1;33m",
 }
 
 def print_color_string(string, color="red"):
     if not string or len(string) == 0:
         return
     print ("\033[" + COLORS[color] + string + "\033[0m")
+
+def print_progress(progress, total):
+    maxCount = 40
+    ratio = progress * 1.0 / total 
+    progress_count = int(round(ratio * maxCount))
+    result = "progress: " + "✓" * progress_count + "✘" * (maxCount - progress_count) + ("    %05.2f%%" % (ratio * 100))
+    print_color_string(result, "o_yellow")
 
 def find_all_pngs(image_path, is_ios):
     command = 'ag -l -g "\.png$" %s' % (image_path)
@@ -90,7 +98,7 @@ def find_unused_pics(image_path, search_path, is_ios):
     length = len(keys)
     for pic in keys:
         index = index + 1
-        print "Search progress：%.2f%%" % (index * 100.0 / length)
+        print_progress(index, length)
         # if index > 0:
         #     break
         if is_ios:
